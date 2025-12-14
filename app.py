@@ -6,7 +6,7 @@ import uuid
 
 # ---------------- CONFIG ----------------
 st.set_page_config(
-    page_title="Drink Order",
+    page_title="BAKEGOODBEGOOD",
     page_icon="🥤",
     layout="centered"
 )
@@ -319,7 +319,7 @@ else:
     <title>Order {row['order_id']}</title>
   </head>
   <body style="font-family: sans-serif; max-width: 400px; margin: 0 auto;">
-    <h2>Drink Cafe – ใบรับออเดอร์</h2>
+    <h2>BAKEGOODBEGOOD – ใบรับออเดอร์</h2>
     <p><strong>Order ID:</strong> {row['order_id']}<br/>
        <strong>วันที่:</strong> {row['created_at']}<br/>
        <strong>ชื่อลูกค้า:</strong> {row['name']}<br/>
