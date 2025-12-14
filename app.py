@@ -132,58 +132,51 @@ if mode == "ลูกค้าสั่งเครื่องดื่ม":
     
     # STEP 2 – เลือกเมนู + เลือกความหวาน + สรุปออเดอร์ (อยู่หน้าเดียว)
     elif st.session_state.step == 2:
-            st.subheader("Step 2: เลือกเมนูเครื่องดื่ม + เลือกความหวาน")
-        
-            DELIVERY_FEE = 5  # ✅ ค่าจัดส่งคงที่ 5 บาท
-        
-            # ---------- เลือกเมนู ----------
-            st.markdown("### 🥤 เลือกเมนู")
-            menu_choice = st.radio(
-                "",
-                options=list(MENU_ITEMS.keys()),
-                index=0
-            )
-            drink_price = MENU_ITEMS[menu_choice]
-        
-            # ---------- เลือกความหวาน ----------
-            st.markdown("### 🍬 เลือกระดับความหวาน")
-            sweetness = st.radio(
-                "",
-                options=SWEETNESS_LEVEL,
-                horizontal=True
-            )
-        
-            # ---------- คำนวณราคา ----------
-            total_price = drink_price + DELIVERY_FEE
-        
-            # ---------- สรุปรายการ ----------
-            st.markdown("---")
-            st.markdown("### 📋 สรุปรายการที่เลือก")
-        
-            st.write(f"**เมนู:** {menu_choice}")
-            st.write(f"**ความหวาน:** {sweetness}")
-            st.write(f"**ราคาเครื่องดื่ม:** {drink_price} บาท")
-            st.write(f"**ค่าจัดส่ง:** {DELIVERY_FEE} บาท")
-            st.write(f"**ยอดรวมทั้งหมด:** 💸 {total_price} บาท")
-        
-            # ✅ เก็บลง session ให้ Step 4 ใช้ต่อ
-            st.session_state.order = {
-                "menu": menu_choice,
-                "sweetness": sweetness,
-                "price": drink_price,        # ราคาเครื่องดื่ม
-                "delivery_fee": DELIVERY_FEE,
-                "total_price": total_price,
-            }
-        
-            st.markdown("---")
-            col1, col2 = st.columns(2)
-            with col1:
-                if st.button("⬅️ ย้อนกลับไปแก้ข้อมูลลูกค้า"):
-                    go_to_step(1)
-        
-            with col2:
-                if st.button("ไป Step 3 – ชำระเงิน ➡️"):
-                    go_to_step(4)   # ข้าม step ความหวานเดิม เพราะรวมแล้ว
+        st.subheader("Step 2: เลือกเมนูเครื่องดื่ม + เลือกความหวาน")
+    
+        DELIVERY_FEE = 5
+    
+        st.markdown("### 🥤 เลือกเมนู")
+        menu_choice = st.radio(
+            "",
+            options=list(MENU_ITEMS.keys()),
+            index=0
+        )
+        drink_price = MENU_ITEMS[menu_choice]
+    
+        st.markdown("### 🍬 เลือกระดับความหวาน")
+        sweetness = st.radio(
+            "",
+            options=SWEETNESS_LEVEL,
+            horizontal=True
+        )
+    
+        total_price = drink_price + DELIVERY_FEE
+    
+        st.markdown("---")
+        st.markdown("### 📋 สรุปรายการที่เลือก")
+        st.write(f"**เมนู:** {menu_choice}")
+        st.write(f"**ความหวาน:** {sweetness}")
+        st.write(f"**ราคาเครื่องดื่ม:** {drink_price} บาท")
+        st.write(f"**ค่าจัดส่ง:** {DELIVERY_FEE} บาท")
+        st.write(f"**ยอดรวมทั้งหมด:** 💸 {total_price} บาท")
+    
+        st.session_state.order = {
+            "menu": menu_choice,
+            "sweetness": sweetness,
+            "price": drink_price,
+            "delivery_fee": DELIVERY_FEE,
+            "total_price": total_price,
+        }
+    
+        st.markdown("---")
+        col1, col2 = st.columns(2)
+        with col1:
+            if st.button("⬅️ ย้อนกลับไปแก้ข้อมูลลูกค้า"):
+                go_to_step(1)
+        with col2:
+            if st.button("ไป Step 3 – ชำระเงิน ➡️"):
+                go_to_step(4)
 
 
 
