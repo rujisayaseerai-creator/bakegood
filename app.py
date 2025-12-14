@@ -129,187 +129,168 @@ if mode == "ลูกค้าสั่งเครื่องดื่ม":
 
     
 
-    # STEP 2 – เลือกเมนู + เลือกความหวาน + สรุปออเดอร์ (รวมหน้าเดียว)
+    
+    # STEP 2 – เลือกเมนู + เลือกความหวาน + สรุปออเดอร์ (อยู่หน้าเดียว)
     elif st.session_state.step == 2:
-        st.subheader("Step 2: เลือกเมนูเครื่องดื่ม + เลือกความหวาน")
-    
-        # ค่าจัดส่งคงที่
-        DELIVERY_FEE = 5
-    
-        # ----------------------------
-        # เลือกเมนู (แสดงตัวเลือกทั้งหมด)
-        # ----------------------------
-        st.markdown("### 🥤 เลือกเมนู")
-        menu_choice = st.radio(
-            "",
-            options=list(MENU_ITEMS.keys()),
-            index=0
-        )
-        drink_price = MENU_ITEMS[menu_choice]
-    
-        # ----------------------------
-        # เลือกระดับความหวาน
-        # ----------------------------
-        st.markdown("### 🍬 เลือกระดับความหวาน")
-        sweetness = st.radio(
-            "",
-            options=SWEETNESS_LEVEL,
-            horizontal=True
-        )
-    
-        # ----------------------------
-        # คำนวณราคารวม
-        # ----------------------------
-        total_price = drink_price + DELIVERY_FEE
-    
-        # ----------------------------
-        # สรุปออเดอร์ในหน้าเดียวกัน
-        # ----------------------------
-        st.markdown("---")
-        st.markdown("### 📋 สรุปรายการที่เลือก")
-    
-        st.write(f"**เมนู:** {menu_choice}")
-        st.write(f"**ความหวาน:** {sweetness}")
-        st.write(f"**ราคาเครื่องดื่ม:** {drink_price} บาท")
-        st.write(f"**ค่าจัดส่ง:** {DELIVERY_FEE} บาท")
-        st.write(f"**ยอดรวมทั้งหมด:** 💸 {total_price} บาท")
-    
-        # เก็บค่าลง session_state
-        st.session_state.order = {
-            "menu": menu_choice,
-            "sweetness": sweetness,
-            "price": drink_price,        # ราคาเครื่องดื่ม
-            "delivery_fee": DELIVERY_FEE,
-            "total_price": total_price,
-        }
-    
-        st.markdown("---")
-    
-        col1, col2 = st.columns(2)
-        with col1:
-            if st.button("⬅️ ย้อนกลับไปแก้ข้อมูลลูกค้า"):
-                go_to_step(1)
-    
-        with col2:
-            if st.button("ไป Step 3 – ชำระเงิน ➡️"):
-                # ข้าม step เดิม เพราะรวมเมนู + ความหวานมาแล้ว
-                go_to_step(4)
+            st.subheader("Step 2: เลือกเมนูเครื่องดื่ม + เลือกความหวาน")
+        
+            DELIVERY_FEE = 5  # ✅ ค่าจัดส่งคงที่ 5 บาท
+        
+            # ---------- เลือกเมนู ----------
+            st.markdown("### 🥤 เลือกเมนู")
+            menu_choice = st.radio(
+                "",
+                options=list(MENU_ITEMS.keys()),
+                index=0
+            )
+            drink_price = MENU_ITEMS[menu_choice]
+        
+            # ---------- เลือกความหวาน ----------
+            st.markdown("### 🍬 เลือกระดับความหวาน")
+            sweetness = st.radio(
+                "",
+                options=SWEETNESS_LEVEL,
+                horizontal=True
+            )
+        
+            # ---------- คำนวณราคา ----------
+            total_price = drink_price + DELIVERY_FEE
+        
+            # ---------- สรุปรายการ ----------
+            st.markdown("---")
+            st.markdown("### 📋 สรุปรายการที่เลือก")
+        
+            st.write(f"**เมนู:** {menu_choice}")
+            st.write(f"**ความหวาน:** {sweetness}")
+            st.write(f"**ราคาเครื่องดื่ม:** {drink_price} บาท")
+            st.write(f"**ค่าจัดส่ง:** {DELIVERY_FEE} บาท")
+            st.write(f"**ยอดรวมทั้งหมด:** 💸 {total_price} บาท")
+        
+            # ✅ เก็บลง session ให้ Step 4 ใช้ต่อ
+            st.session_state.order = {
+                "menu": menu_choice,
+                "sweetness": sweetness,
+                "price": drink_price,        # ราคาเครื่องดื่ม
+                "delivery_fee": DELIVERY_FEE,
+                "total_price": total_price,
+            }
+        
+            st.markdown("---")
+            col1, col2 = st.columns(2)
+            with col1:
+                if st.button("⬅️ ย้อนกลับไปแก้ข้อมูลลูกค้า"):
+                    go_to_step(1)
+        
+            with col2:
+                if st.button("ไป Step 3 – ชำระเงิน ➡️"):
+                    go_to_step(4)   # ข้าม step ความหวานเดิม เพราะรวมแล้ว
 
 
-    # STEP 4 – ชำระเงิน & แนบสลิป
-elif st.session_state.step == 4:
-        st.subheader("Step 3: ชำระเงิน & แนบสลิป")
-    
-        customer = st.session_state.customer
-        order = st.session_state.order
-    
-        st.markdown("### 👤 ข้อมูลลูกค้า")
-        st.write(f"**ชื่อ:** {customer.get('name', '-')}")
-        st.write(f"**เบอร์โทรศัพท์:** {customer.get('phone', '-')}")
-    
-        st.markdown("### 🥤 รายการที่สั่ง")
-    
-        drink_price = order.get("price", 0)
-        delivery_fee = order.get("delivery_fee", 0)
-        total_price = order.get("total_price", drink_price + delivery_fee)
-    
-        st.write(f"**เมนู:** {order.get('menu', '-')}")
-        st.write(f"**ความหวาน:** {order.get('sweetness', '-')}")
-    
-        # แยกบรรทัดให้เห็นราคา + ค่าจัดส่งชัดเจน
-        st.write(f"**ราคาเครื่องดื่ม:** {drink_price} บาท")
-        st.write(f"**ค่าจัดส่ง:** {DELIVERY_FEE} บาท")
-        st.write(f"**ยอดรวมทั้งหมด:** 💸 {total_price} บาท")
-    
-        st.markdown("---")
-        st.markdown("### 📲 สแกน QR เพื่อชำระเงิน")
-        show_qr_image()
-    
-        st.markdown("### 🧾 แนบสลิปโอนเงิน")
-        slip_file = st.file_uploader(
-            "อัปโหลดสลิปโอนเงิน (ไฟล์รูป)",
-            type=["png", "jpg", "jpeg"]
-        )
-    
-        col1, col2 = st.columns(2)
-        with col1:
-            if st.button("⬅️ ย้อนกลับไปแก้เมนู / ความหวาน"):
-                go_to_step(2)
-    
-        with col2:
-            confirm_btn = st.button("✅ ยืนยันออเดอร์")
-    
-        if confirm_btn:
-            if slip_file is None:
-                st.error("กรุณาอัปโหลดสลิปโอนเงินก่อนกดยืนยันออเดอร์นะคะ")
-            else:
-                # ----------------------------
-                # เซฟไฟล์สลิปลงโฟลเดอร์ slips/
-                # ----------------------------
-                ext = os.path.splitext(slip_file.name)[1].lower()
-                if ext == "":
-                    ext = ".jpg"
-                slip_name = f"slip_{uuid.uuid4().hex}{ext}"
-                slip_path = os.path.join(SLIPS_DIR, slip_name)
-                with open(slip_path, "wb") as f:
-                    f.write(slip_file.getbuffer())
-    
-                # ----------------------------
-                # สร้าง order_id รวมชื่อลูกค้า + เบอร์ + เวลา
-                # ----------------------------
-                now = datetime.now()
-    
-                clean_name = customer.get("name", "").strip().replace(" ", "").lower()
-                clean_phone = customer.get("phone", "").strip()
-                timestamp = now.strftime("%Y%m%d%H%M%S")
-    
-                order_id = f"{clean_name}-{clean_phone}-{timestamp}"
-    
-                # ----------------------------
-                # เตรียมข้อมูลออเดอร์สำหรับบันทึก
-                # ----------------------------
-                order_data = {
-                    "order_id": order_id,
-                    "created_at": now.strftime("%Y-%m-%d %H:%M:%S"),
-                    "name": customer.get("name", ""),
-                    "phone": customer.get("phone", ""),
-                    "menu": order.get("menu", ""),
-                    "sweetness": order.get("sweetness", ""),
-                    "price": drink_price,
-                    "delivery_fee": delivery_fee,
-                    "total_price": total_price,
-                    "slip_file": slip_name,
-                }
-    
-                save_order(order_data)
-    
-                # ----------------------------
-                # ส่งแจ้งเตือนไป LINE (ถ้ามีฟังก์ชัน send_line_notify)
-                # ----------------------------
-                try:
-                    msg = (
-                        "📦 มีออเดอร์ใหม่!\n"
-                        f"ID: {order_id}\n"
-                        f"ลูกค้า: {customer.get('name', '')}\n"
-                        f"เบอร์: {customer.get('phone', '')}\n"
-                        f"เมนู: {order.get('menu', '')}\n"
-                        f"ความหวาน: {order.get('sweetness', '')}\n"
-                        f"ราคาเครื่องดื่ม: {drink_price} บาท\n"
-                        f"ค่าจัดส่ง: {delivery_fee} บาท\n"
-                        f"ยอดรวมทั้งหมด: {total_price} บาท"
-                    )
-                    send_line_notify(msg)  # ฟังก์ชันนี้ต้องไปประกาศไว้ด้านบนตามที่เคยให้ไว้
-                except NameError:
-                    # ถ้ายังไม่ได้ประกาศ send_line_notify ก็ข้ามไปเฉย ๆ
-                    pass
-    
-                st.success(f"🎉 รับออเดอร์เรียบร้อยแล้ว! (Order ID: {order_id})")
-                st.info("กรุณารอเรียกชื่อเมื่อเครื่องดื่มของคุณพร้อมเสิร์ฟนะคะ 🥤")
-    
-                if st.button("เริ่มออเดอร์ใหม่ 🆕"):
-                    st.session_state.step = 1
-                    st.session_state.customer = {}
-                    st.session_state.order = {}
+
+# STEP 4 – ชำระเงิน & แนบสลิป
+    elif st.session_state.step == 4:
+            st.subheader("Step 3: ชำระเงิน & แนบสลิป")
+        
+            customer = st.session_state.customer
+            order = st.session_state.order
+        
+            st.markdown("### 👤 ข้อมูลลูกค้า")
+            st.write(f"**ชื่อ:** {customer.get('name', '-')}")
+            st.write(f"**เบอร์โทรศัพท์:** {customer.get('phone', '-')}")
+        
+            st.markdown("### 🥤 รายการที่สั่ง")
+        
+            drink_price = order.get("price", 0)
+            delivery_fee = order.get("delivery_fee", 0)
+            total_price = order.get("total_price", drink_price + delivery_fee)
+        
+            st.write(f"**เมนู:** {order.get('menu', '-')}")
+            st.write(f"**ความหวาน:** {order.get('sweetness', '-')}")
+        
+            # ✅ แสดง 3 บรรทัดให้เห็นค่าจัดส่งชัด ๆ
+            st.write(f"**ราคาเครื่องดื่ม:** {drink_price} บาท")
+            st.write(f"**ค่าจัดส่ง:** {delivery_fee} บาท")
+            st.write(f"**ยอดรวมทั้งหมด:** 💸 {total_price} บาท")
+        
+            st.markdown("---")
+            st.markdown("### 📲 สแกน QR เพื่อชำระเงิน")
+            show_qr_image()
+        
+            st.markdown("### 🧾 แนบสลิปโอนเงิน")
+            slip_file = st.file_uploader(
+                "อัปโหลดสลิปโอนเงิน (ไฟล์รูป)",
+                type=["png", "jpg", "jpeg"]
+            )
+        
+            col1, col2 = st.columns(2)
+            with col1:
+                if st.button("⬅️ ย้อนกลับไปแก้เมนู / ความหวาน"):
+                    go_to_step(2)
+        
+            with col2:
+                confirm_btn = st.button("✅ ยืนยันออเดอร์")
+        
+            if confirm_btn:
+                if slip_file is None:
+                    st.error("กรุณาอัปโหลดสลิปโอนเงินก่อนกดยืนยันออเดอร์นะคะ")
+                else:
+                    # ----- เซฟสลิป -----
+                    ext = os.path.splitext(slip_file.name)[1].lower()
+                    if ext == "":
+                        ext = ".jpg"
+                    slip_name = f"slip_{uuid.uuid4().hex}{ext}"
+                    slip_path = os.path.join(SLIPS_DIR, slip_name)
+                    with open(slip_path, "wb") as f:
+                        f.write(slip_file.getbuffer())
+        
+                    # ----- สร้าง order_id รวมชื่อ + เบอร์ + เวลา -----
+                    now = datetime.now()
+                    clean_name = customer.get("name", "").strip().replace(" ", "").lower()
+                    clean_phone = customer.get("phone", "").strip()
+                    timestamp = now.strftime("%Y%m%d%H%M%S")
+                    order_id = f"{clean_name}-{clean_phone}-{timestamp}"
+        
+                    # ----- เตรียมข้อมูลบันทึก -----
+                    order_data = {
+                        "order_id": order_id,
+                        "created_at": now.strftime("%Y-%m-%d %H:%M:%S"),
+                        "name": customer.get("name", ""),
+                        "phone": customer.get("phone", ""),
+                        "menu": order.get("menu", ""),
+                        "sweetness": order.get("sweetness", ""),
+                        "price": drink_price,
+                        "delivery_fee": delivery_fee,
+                        "total_price": total_price,
+                        "slip_file": slip_name,
+                    }
+        
+                    save_order(order_data)
+        
+                    # ----- ส่ง LINE (ถ้ามีฟังก์ชัน send_line_notify) -----
+                    try:
+                        msg = (
+                            "📦 มีออเดอร์ใหม่!\n"
+                            f"ID: {order_id}\n"
+                            f"ลูกค้า: {customer.get('name', '')}\n"
+                            f"เบอร์: {customer.get('phone', '')}\n"
+                            f"เมนู: {order.get('menu', '')}\n"
+                            f"ความหวาน: {order.get('sweetness', '')}\n"
+                            f"ราคาเครื่องดื่ม: {drink_price} บาท\n"
+                            f"ค่าจัดส่ง: {delivery_fee} บาท\n"
+                            f"ยอดรวมทั้งหมด: {total_price} บาท"
+                        )
+                        send_line_notify(msg)
+                    except NameError:
+                        pass
+        
+                    st.success(f"🎉 รับออเดอร์เรียบร้อยแล้ว! (Order ID: {order_id})")
+                    st.info("กรุณารอเรียกชื่อเมื่อเครื่องดื่มของคุณพร้อมเสิร์ฟนะคะ 🥤")
+        
+                    if st.button("เริ่มออเดอร์ใหม่ 🆕"):
+                        st.session_state.step = 1
+                        st.session_state.customer = {}
+                        st.session_state.order = {}
+
 
 # -------------------------------------------------
 #                 ADMIN MODE
