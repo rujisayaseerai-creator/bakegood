@@ -15,10 +15,10 @@ st.set_page_config(
 page_bg = """
 <style>
 [data-testid="stAppViewContainer"]{
-    background: #FDFBD4;
+    background: #A2C99F;
 }
 [data-testid="stSidebar"]{
-    background: #F7F2E7;
+    background: #A2C99F;
 }
 </style>
 """
