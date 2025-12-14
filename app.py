@@ -229,7 +229,15 @@ if mode == "ลูกค้าสั่งเครื่องดื่ม":
                     f.write(slip_file.getbuffer())
 
                 now = datetime.now()
-                order_id = now.strftime("%Y%m%d%H%M%S")
+                # จัดการชื่อให้ไม่มีช่องว่าง / ตัวพิมพ์เล็ก
+                clean_name = customer.get("name", "").strip().replace(" ", "").lower()
+                clean_phone = customer.get("phone", "").strip()
+                
+                # timestamp
+                timestamp = now.strftime("%Y%m%d%H%M%S")
+                
+                # สร้าง order_id ใหม่
+                order_id = f"{clean_name}-{clean_phone}-{timestamp}"
 
                 order_data = {
                     "order_id": order_id,
