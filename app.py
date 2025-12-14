@@ -85,7 +85,7 @@ if "order" not in st.session_state:
     st.session_state.order = {}
 
 # ---------------- SIDEBAR ----------------
-st.sidebar.title("🥤 Drink Cafe")
+st.sidebar.title("BAKEGOODBEGOOD")
 
 mode = st.sidebar.radio(
     "เลือกโหมด",
