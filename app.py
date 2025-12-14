@@ -127,7 +127,7 @@ if mode == "ลูกค้าสั่งเครื่องดื่ม":
                 }
                 go_to_step(2)
 
-    # STEP 2 – เลือกเมนู
+# STEP 2 – เลือกเมนู
 elif st.session_state.step == 2:
     st.subheader("Step 2: เลือกเมนูเครื่องดื่ม")
 
@@ -157,6 +157,7 @@ elif st.session_state.step == 2:
                 "price": price,
             }
             go_to_step(3)
+
 
     # STEP 3 – เลือกความหวาน
     elif st.session_state.step == 3:
